@@ -35,12 +35,13 @@ func getPresets(folder string) error {
 	items := []presets{
 		{Name: "svelte-rollup", Url: "https://github.com/sveltejs/template.git"},
 		{Name: "svelte-snowpack", Url: "https://svelte.dev"},
+		{Name: "svelte-tailwind-snowpack", Url: "https://svelte.dev"},
 	}
 	templates := &promptui.SelectTemplates{
 		Label:    "{{ . }}?",
-		Active:   "{{ .Name | cyan}}",
-		Inactive: " {{ .Name | cyan}}",
-		Selected: "{{ .Name | cyan }}",
+		Active:   "\U000027A4 {{ .Name | green}}",
+		Inactive: " {{ .Name }}",
+		Selected: "\U000027A4 {{ .Name | cyan }}",
 	}
 
 	searcher := func(input string, index int) bool {
@@ -85,9 +86,19 @@ func getPresets(folder string) error {
 		if err != nil {
 			log.Fatal(err)
 		}
+
+	case "svelte-tailwind-snowpack":
+		fmt.Println("Installing the Snowpack Typescript template")
+		clone := exec.Command("npx", "create-snowpack-app", folder, "--template", "@snowpack/app-template-svelte-typescript")
+		var stdoutBuf, stderrBuf bytes.Buffer
+		clone.Stdout = io.MultiWriter(os.Stdout, &stdoutBuf)
+		clone.Stderr = io.MultiWriter(os.Stderr, &stderrBuf)
+
+		err := clone.Run()
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
-	// clone := exec.Command("git", "clone", "git@github.com:wesleymutwiri/svelte-ecommerce-design.git")
-	// clone.Run()
 	return nil
 }

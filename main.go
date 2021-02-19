@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/wesleymutwiri/svelte-cli/cmd"
+	"github.com/wesleymutwiri/personal-svelte-cli/cmd"
 )
 
 func main() {

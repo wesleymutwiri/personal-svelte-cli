@@ -1,4 +1,4 @@
-module github.com/wesleymutwiri/svelte-cli
+module github.com/wesleymutwiri/personal-svelte-cli
 
 go 1.16
 

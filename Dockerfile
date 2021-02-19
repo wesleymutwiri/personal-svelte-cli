@@ -8,10 +8,12 @@ ADD . /app
 
 WORKDIR /app
 
+ENV FOLDER ""
+
 ENV GO111MODULE=on
 
 RUN go mod download
 
 RUN go build -o main .
 
-CMD "/app/main"
+CMD /app/main create $FOLDER

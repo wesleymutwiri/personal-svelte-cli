@@ -36,6 +36,8 @@ func getPresets(folder string) error {
 		{Name: "svelte-rollup", Url: "https://github.com/sveltejs/template.git"},
 		{Name: "svelte-snowpack", Url: "https://svelte.dev"},
 		{Name: "svelte-tailwind-snowpack", Url: "https://svelte.dev"},
+		{Name: "sapper-rollup", Url: "https://github.com/sveltejs/sapper-template-rollup.git"},
+		{Name: "sapper-webpack", Url: "https://github.com/sveltejs/sapper-template-webpack.git"},
 	}
 	templates := &promptui.SelectTemplates{
 		Label:    "{{ . }}?",
@@ -70,9 +72,15 @@ func getPresets(folder string) error {
 	case "svelte-rollup":
 		fmt.Println("Installing the rollup template")
 		clone := exec.Command("git", "clone", "--depth", "1", items[i].Url, folder)
-		clone.Run()
-		removeGit := exec.Command("rm", "-rf", "/svelty-trial/.git")
-		removeGit.Run()
+		err := clone.Run()
+		if err != nil {
+			log.Fatal(err)
+		}
+		removeGit := exec.Command("rm", "-rf", folder+"/"+".git")
+		err = removeGit.Run()
+		if err != nil {
+			log.Fatal(err)
+		}
 		fmt.Println("Installation done. Kindly change directory")
 
 	case "svelte-snowpack":
@@ -98,6 +106,31 @@ func getPresets(folder string) error {
 		if err != nil {
 			log.Fatal(err)
 		}
+
+	case "sapper-rollup":
+		fmt.Println("Installing the Sapper rollup template")
+		clone := exec.Command("git", "clone", "--depth", "1", items[i].Url, folder)
+		clone.Run()
+		removeGit := exec.Command("rm", "-rf", folder+"/"+".git")
+		err = removeGit.Run()
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println("Installation done. Kindly change directory")
+
+	case "sapper-webpack":
+		fmt.Println("Installing the Sapper Webpack template")
+		clone := exec.Command("git", "clone", "--depth", "1", items[i].Url, folder)
+		err := clone.Run()
+		if err != nil {
+			log.Fatal(err)
+		}
+		removeGit := exec.Command("rm", "-rf", folder+"/"+".git")
+		err = removeGit.Run()
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println("Installation done. Kindly change directory")
 	}
 
 	return nil

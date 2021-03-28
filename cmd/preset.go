@@ -38,6 +38,7 @@ func getPresets(folder string) error {
 		{Name: "svelte-tailwind-snowpack", Url: "https://svelte.dev"},
 		{Name: "sapper-rollup", Url: "https://github.com/sveltejs/sapper-template-rollup.git"},
 		{Name: "sapper-webpack", Url: "https://github.com/sveltejs/sapper-template-webpack.git"},
+		{Name: "svelte-kit", Url: "https://svelte.dev"},
 	}
 	templates := &promptui.SelectTemplates{
 		Label:    "{{ . }}?",
@@ -67,7 +68,7 @@ func getPresets(folder string) error {
 		fmt.Printf("Prompt failed %v \n", err)
 		return err
 	}
-	fmt.Printf("You chose number %d:%s\n", items[i].Name)
+	fmt.Printf("You chose number %d:%s\n", i, items[i].Name)
 	switch items[i].Name {
 	case "svelte-rollup":
 		fmt.Println("Installing the rollup template")
@@ -131,6 +132,18 @@ func getPresets(folder string) error {
 			log.Fatal(err)
 		}
 		fmt.Println("Installation done. Kindly change directory")
+
+	case "svelte-kit":
+		fmt.Println("Preparing the installation for the svelte kit template")
+		npm_commands := exec.Command("npm", "init", "svelte@next", folder)
+		var stdoutBuf, stderrBuf bytes.Buffer
+		npm_commands.Stdout = io.MultiWriter(os.Stdout, &stdoutBuf)
+		npm_commands.Stderr = io.MultiWriter(os.Stderr, &stderrBuf)
+
+		err := npm_commands.Run()
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	return nil

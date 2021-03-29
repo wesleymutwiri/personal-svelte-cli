@@ -136,11 +136,20 @@ func getPresets(folder string) error {
 	case "svelte-kit":
 		fmt.Println("Preparing the installation for the svelte kit template")
 		npm_commands := exec.Command("npm", "init", "svelte@next", folder)
-		var stdoutBuf, stderrBuf bytes.Buffer
-		npm_commands.Stdout = io.MultiWriter(os.Stdout, &stdoutBuf)
+		var stderrBuf, stdoutBuf bytes.Buffer
+		npm_commands.Stdout = io.Writer(os.Stdout)
 		npm_commands.Stderr = io.MultiWriter(os.Stderr, &stderrBuf)
+		npm_commands.Stdin = io.Reader(os.Stdin)
 
 		err := npm_commands.Run()
+		if err != nil {
+			log.Fatal(err)
+		}
+		install_packages := exec.Command("npm", "install")
+		install_packages.Stdout = io.MultiWriter(os.Stdout, &stdoutBuf)
+		install_packages.Stderr = io.MultiWriter(os.Stderr, &stderrBuf)
+		install_packages.Dir = folder
+		err = install_packages.Run()
 		if err != nil {
 			log.Fatal(err)
 		}
